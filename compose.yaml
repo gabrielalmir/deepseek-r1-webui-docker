@@ -24,7 +24,7 @@ services:
     ports:
       - "${WEBUI_PORT:-3000}:8080"
     environment:
-      - OLLAMA_BASE_URL=http://ollama:${OLLAMA_PORT:-11434}
+      - OLLAMA_BASE_URL=http://ollama:11434
     volumes:
       - open-webui:/app/backend/data
     restart: always
