@@ -3,7 +3,7 @@ services:
     build: .
     container_name: ollama
     ports:
-      - "11434:11434"
+      - "${OLLAMA_PORT:-11434}:11434"
     volumes:
       - ollama:/root/.ollama
       - ./entrypoint.sh:/entrypoint.sh
@@ -22,9 +22,9 @@ services:
     image: ghcr.io/open-webui/open-webui:main
     container_name: open-webui
     ports:
-      - "3000:8080"
+      - "${WEBUI_PORT:-3000}:8080"
     environment:
-      - OLLAMA_BASE_URL=http://ollama:11434
+      - OLLAMA_BASE_URL=http://ollama:${OLLAMA_PORT:-11434}
     volumes:
       - open-webui:/app/backend/data
     restart: always

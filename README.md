@@ -11,7 +11,7 @@ This project sets up a Docker-based environment for running the DeepSeek model u
 
 1. Clone the repository:
     ```sh
-    git clone https://github.com/gabrielalmir/deepseek.git
+    git clone https://github.com/gabrielalmir/deepseek-r1-webui-docker
     cd deepseek
     ```
 
