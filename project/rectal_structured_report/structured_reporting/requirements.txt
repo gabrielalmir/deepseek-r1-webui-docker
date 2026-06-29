@@ -1,0 +1,7 @@
+langchain>=1,<2
+langchain-openai>=1,<2
+pydantic>=2,<3
+pytest>=8,<10
+socksio>=1,<2
+openpyxl>=3.1,<4
+PyYAML>=6,<7
