@@ -1,0 +1,68 @@
+version: 1
+name: rectal_mri
+language: zh-CN
+base_prompt: >-
+  你是一名专业的结直肠癌 MR 评估医生。请严格根据当前提供的报告原文提取信息，
+  禁止编造、联想、补全或使用报告之外的知识。
+missing:
+  excel_value: None
+fields:
+  - id: tumor_location
+    label: 肿瘤的位置
+    type: enum
+    choices: [上段, 中段, 下段, 中上段, 中下段, 直肠全段, 直肠乙状结肠交界区]
+    rule: 只能采用报告明确描述的位置；缺失、矛盾或证据不足时输出 null。
+  - id: tumor_length
+    label: 肿瘤累及长度
+    excel_header: 肿瘤累及长度
+    type: number
+    unit: mm
+    unit_conversions:
+      mm: 1
+      cm: 10
+      毫米: 1
+      厘米: 10
+    minimum: 0
+    rule: >-
+      只提取报告明确描述的肿瘤累及长度，不得使用最大厚度、横径或距肛缘距离替代；
+      cm 乘以 10 后输出以 mm 为目标单位的 JSON 数字。
+  - id: tumor_depth
+    label: 肿瘤浸润深度
+    type: enum
+    choices: [T1, T2, T3, T4]
+    rule: >-
+      T1 为累及黏膜及黏膜下层；T2 为累及肌层但未突破且周围系膜脂肪间隙清楚；
+      T3 为肌层中断或穿透肌层侵犯直肠周围系膜脂肪、内外括约肌间隙，或周围脂肪间隙毛糙；
+      T4 为侵及邻近浆膜、腹膜返折或膀胱、前列腺、精囊腺、子宫、阴道、外括约肌、肛提肌等邻近器官。
+      报告直接给出分期且与描述无明显冲突时可采用，否则严格按上述定义；证据不足时输出 null。
+  - id: mesorectal_nodes
+    label: 直肠系膜内淋巴结评估
+    type: enum
+    choices: [有, 无]
+    rule: >-
+      短径小于5mm且边界不清楚、形态不规则、信号不均匀三个特征同时存在时为有；
+      短径5-9mm且上述三个特征任意两个存在时为有；短径大于9mm时为有；
+      明确未见可疑淋巴结或未见淋巴结时为无；信息不足时输出 null。
+  - id: extramesorectal_nodes
+    label: 直肠系膜外淋巴结评估
+    type: enum
+    choices: [有, 无]
+    rule: >-
+      系膜外淋巴结短径大于等于7mm时为有；明确未见系膜外淋巴结时为无；
+      未描述或缺少足够尺寸信息时输出 null。
+  - id: crm_involvement
+    label: CRM受累情况
+    type: enum
+    choices: [有, 无]
+    rule: >-
+      肿瘤或淋巴结距系膜筋膜 MRF 的距离小于等于1mm，或肿瘤邻近的系膜筋膜局部增厚时为有；
+      肿瘤及淋巴结距 MRF 的距离大于1mm时为无；未提供足够距离或筋膜信息时输出 null。
+  - id: emvi_involvement
+    label: EMVI受累情况
+    type: enum
+    choices: [有, 无]
+    rule: >-
+      肿瘤邻近血管增粗、形态不规则，或血管内见异常肿瘤信号充盈时为有；
+      邻近血管形态规则、信号均匀并存在流空效应，或明确写明直肠系膜内血管未见明显异常时为无；
+      仅描述“血管增多”而未描述增粗、不规则或异常充盈，不作为阳性证据，没有其他证据时输出 null。
+
